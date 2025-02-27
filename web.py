@@ -5,13 +5,11 @@ from statsmodels.tsa.arima.model import ARIMA
 from joblib import dump, load
 import plotly.graph_objects as go
 
-
 @st.cache_data(ttl=3600)
 def load_data(filename='Data_total.csv'):
     data = pd.read_csv(filename)
     data = data.drop('Month', axis=1, errors='ignore')
     return data
-
 
 def clean_data(data):
     columns = ['Inbound_Inter', 'Outbound_Inter', 'Inbound_Dom', 'Outbound_Dom', 'Total In', 'Total Out']
@@ -50,7 +48,6 @@ def main():
     data_file = 'Data_total.csv'
     data = load_data(data_file)
     data = clean_data(data)
-
     option = st.sidebar.selectbox("Choose an option:", ["Add New Data", "Predictions"])
 
     if option == "Add New Data":
@@ -102,7 +99,7 @@ def main():
         ])
         fig.update_layout(
             title={
-                'text': "Predicted Tonnage",  # Tiêu đề của biểu đồ
+                'text': "Predicted Tonnage Next Month",  # Tiêu đề của biểu đồ
                 'y': 1,  # Vị trí trục y của tiêu đề, giá trị từ 0 đến 1
                 'x': 0.5,  # Vị trí trục x của tiêu đề, căn giữa là 0.5
                 'xanchor': 'center',  # Căn tiêu đề tại vị trí x
