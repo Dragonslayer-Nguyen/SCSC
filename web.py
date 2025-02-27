@@ -35,7 +35,7 @@ def create_lstm_model(input_shape, output_units):
     ])
     model.compile(loss='mean_squared_error', optimizer='adam')
     return model
-def model_LSTM(data, time_steps=8, epochs=50, batch_size=64):
+def model_LSTM(data, time_steps=12, epochs=50, batch_size=12):
     data = clean_data(data)
     data_features = data.values
     scaler = StandardScaler()
@@ -59,14 +59,15 @@ def output_LSTM(model, scaler, data, time_steps=12):
 
     return predicted_values
 
-# Đặt tiêu đề trên Streamlit
-st.title('Predicted Tonnage Visualization')
+# # Đặt tiêu đề trên Streamlit
+# st.title('Predicted Tonnage Visualization')
 
 # Chạy mô hình và lấy output
-model, scaler = model_LSTM(data, time_steps=8, epochs=50, batch_size=64)
-output = output_LSTM(model, scaler, data, time_steps=8)
+model, scaler = model_LSTM(data, time_steps=12, epochs=50, batch_size=12)
+output = output_LSTM(model, scaler, data, time_steps=12)
 output_values = output.flatten()
 
+st.set_page_config(layout="wide")
 # Các nhãn tương ứng cho mỗi giá trị
 labels = ['Inbound_Inter', 'Outbound_Inter', 'Inbound_Dom', 'Outbound_Dom']
 
@@ -75,26 +76,30 @@ fig = go.Figure(data=[
     go.Bar(
         x=labels,
         y=output_values,
-        marker_color=['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'], # Màu cho mỗi cột, sử dụng màu hex
-        hoverinfo='y', # Chỉ hiển thị giá trị y khi hover
-        hovertemplate='%{y:.2f}<extra></extra>' # Định dạng giá trị hiển thị khi hover
+        marker_color=['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+        hoverinfo='y',
+        hovertemplate='%{y:.2f}<extra></extra>'
     )
 ])
 
-# Thêm các tùy chọn định dạng cho biểu đồ
 fig.update_layout(
     title={
-        'text': "Predicted Tonnage",
-        'y':0.9,
-        'x':0.5,
-        'xanchor': 'center',
-        'yanchor': 'top'},
-    title_font=dict(size=25, color='#333'),
+        'text': "Predicted Tonnage",  # Tiêu đề của biểu đồ
+        'y': 1,  # Vị trí trục y của tiêu đề, giá trị từ 0 đến 1
+        'x': 0.5,  # Vị trí trục x của tiêu đề, căn giữa là 0.5
+        'xanchor': 'center',  # Căn tiêu đề tại vị trí x
+        'yanchor': 'top'  # Căn tiêu đề tại vị trí y
+    },
+    title_font=dict(size=32, color='blue'),  # Thiết lập font chữ và màu sắc cho tiêu đề
     xaxis_title="Category",
     yaxis_title="Volume (Ton)",
-    plot_bgcolor='white', # Màu nền cho biểu đồ
-    paper_bgcolor='white', # Màu nền cho khu vực biểu đồ
+    autosize=False,
+    width=600,  # Chiều rộng của biểu đồ
+    height=800,  # Chiều cao của biểu đồ
+    plot_bgcolor='white',
+    paper_bgcolor='white'
 )
 
-# Hiển thị biểu đồ trên Streamlit
-st.plotly_chart(fig)
+
+# Hiển thị biểu đồ trên Streamlit, sử dụng toàn bộ chiều rộng của container
+st.plotly_chart(fig, use_container_width=True)
