@@ -56,10 +56,10 @@ def main():
     if option == "Add New Data":
         st.subheader("Add New Data Entry")
         with st.form("new_data_form"):
-            inbound_inter = st.number_input('Inbound International', min_value=0.0, format="%.2f")
-            outbound_inter = st.number_input('Outbound International', min_value=0.0, format="%.2f")
-            inbound_dom = st.number_input('Inbound Domestic', min_value=0.0, format="%.2f")
-            outbound_dom = st.number_input('Outbound Domestic', min_value=0.0, format="%.2f")
+            inbound_inter = st.number_input('Inbound International', min_value=10.0, format="%.2f")
+            outbound_inter = st.number_input('Outbound International', min_value=10.0, format="%.2f")
+            inbound_dom = st.number_input('Inbound Domestic', min_value=10.0, format="%.2f")
+            outbound_dom = st.number_input('Outbound Domestic', min_value=10.0, format="%.2f")
             submit_button = st.form_submit_button("Submit and Retrain")
 
             if submit_button:
