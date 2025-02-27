@@ -56,21 +56,26 @@ def main():
     if option == "Add New Data":
         st.subheader("Add New Data Entry")
         with st.form("new_data_form"):
-            inbound_inter = st.number_input('Inbound International', min_value=10.0, format="%.2f")
-            outbound_inter = st.number_input('Outbound International', min_value=10.0, format="%.2f")
-            inbound_dom = st.number_input('Inbound Domestic', min_value=10.0, format="%.2f")
-            outbound_dom = st.number_input('Outbound Domestic', min_value=10.0, format="%.2f")
+            inbound_inter = st.number_input('Inbound International', min_value=0.00, format="%.2f")
+            outbound_inter = st.number_input('Outbound International', min_value=0.00, format="%.2f")
+            inbound_dom = st.number_input('Inbound Domestic', min_value=0.00, format="%.2f")
+            outbound_dom = st.number_input('Outbound Domestic', min_value=0.00, format="%.2f")
             submit_button = st.form_submit_button("Submit and Retrain")
 
+            # Check if all fields are filled
             if submit_button:
-                new_data = pd.DataFrame({
-                    'Inbound_Inter': [inbound_inter],
-                    'Outbound_Inter': [outbound_inter],
-                    'Inbound_Dom': [inbound_dom],
-                    'Outbound_Dom': [outbound_dom]
-                })
-                updated_data = pd.concat([data, new_data], ignore_index=True)
-                updated_data.to_csv(data_file, index=False)
+                if any([v == 0.00 for v in [inbound_inter, outbound_inter, inbound_dom, outbound_dom]]):
+                    st.warning("Please enter all fields before submitting.")
+                else:
+                    # Proceed with retraining or data processing here
+                    new_data = pd.DataFrame({
+                        'Inbound_Inter': [inbound_inter],
+                        'Outbound_Inter': [outbound_inter],
+                        'Inbound_Dom': [inbound_dom],
+                        'Outbound_Dom': [outbound_dom]
+                    })
+                    updated_data = pd.concat([data, new_data], ignore_index=True)
+                    updated_data.to_csv(data_file, index=False)
 
                 for var in ['Inbound_Inter', 'Outbound_Inter', 'Inbound_Dom', 'Outbound_Dom']:
                     series = updated_data[var].dropna()
